@@ -5,7 +5,7 @@ yaml-files:
   - '.yamllint'
 
 ignore:
-  - node_modules/
+  - charts/**/templates/**
 
 rules:
   anchors: enable
