@@ -1,0 +1,91 @@
+---
+name: Validate Helm Charts
+
+# Events that trigger workflows: https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows
+on:
+  push:    # By default, a workflow only runs when a pull_request event's activity type is opened, synchronize, or reopened
+
+# Set Workflow-level permissions: https://docs.github.com/en/actions/using-jobs/assigning-permissions-to-jobs
+permissions:
+  contents: read
+
+# Set Workflow-level environment variables
+env:
+  CHARTS_ROOT: "./charts"
+
+jobs:
+  validate-template:
+    strategy:
+      matrix:
+        chart: [demoapp-backend, demoapp-frontend]
+        value: [values.yaml]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4    # https://github.com/marketplace/actions/checkout
+
+      - name: Set helm chart path
+        run: |
+          echo "CHART_PATH=${{ env.CHARTS_ROOT }}/${{ matrix.chart }}" >> $GITHUB_ENV
+
+      - name: Update dependencies
+        run: |
+          cd "${{ env.CHART_PATH }}"
+          helm dependency update .
+
+      # Helm is pre-installed in GitHub-hosted runners: https://github.com/actions/runner-images/blob/main/images/linux/Ubuntu2204-Readme.md#package-management
+      - name: Helm Template
+        run: |
+          cd "${{ env.CHART_PATH }}"
+          helm template . --values "${{ matrix.value }}"
+
+  validate-k3s:
+    needs: validate-template
+    strategy:
+      matrix:
+        chart: [demoapp-backend, demoapp-frontend]
+        value: [values.yaml]
+        # k3s releases: https://github.com/k3s-io/k3s/releases
+        # '' = stable version
+        k3s_version: ['']    # , v1.28.2+k3s1, v1.27.7+k3s1, v1.26.10+k3s1]
+    runs-on: ubuntu-latest
+    env:
+      # Set KUBECONFIG path to default k3s location
+      KUBECONFIG: /etc/rancher/k3s/k3s.yaml
+    steps:
+      - name: Setup k3s
+        run: |
+          curl -sfL https://get.k3s.io | K3S_KUBECONFIG_MODE="644" INSTALL_K3S_VERSION=${{ matrix.k3s_version }} sh -
+
+      # Kubectl is pre-installed in GitHub-hosted runners: https://github.com/actions/runner-images/blob/main/images/linux/Ubuntu2204-Readme.md#tools
+      - name: Get Kubernetes Version
+        run: |
+          kubectl version
+
+      - name: Set helm chart path
+        run: |
+          echo "CHART_PATH=${{ env.CHARTS_ROOT }}/${{ matrix.chart }}" >> $GITHUB_ENV
+
+      - name: Checkout repository
+        uses: actions/checkout@v4    # https://github.com/marketplace/actions/checkout
+
+      - name: Update dependencies
+        run: |
+          cd "${{ env.CHART_PATH }}"
+          helm dependency update .
+
+      - name: Helm Dry-run (Server)
+        run: |
+          cd "${{ env.CHART_PATH }}"
+          helm install ${{ matrix.chart }} . --dry-run=server
+
+      - name: Helm Install
+        run: |
+          cd "${{ env.CHART_PATH }}"
+          helm install ${{ matrix.chart }} . --wait --timeout 30s
+
+  # helm-dry-run-openshift:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout repository
+  #       uses: actions/checkout@v4    # https://github.com/marketplace/actions/checkout

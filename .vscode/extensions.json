@@ -3,6 +3,7 @@
         "ms-vscode-remote.remote-containers",
         "tim-koehler.helm-intellisense",
         "ms-kubernetes-tools.vscode-kubernetes-tools",
-        "redhat.vscode-openshift-connector"
+        "redhat.vscode-openshift-connector",
+        "github.vscode-github-actions"
     ]
 }

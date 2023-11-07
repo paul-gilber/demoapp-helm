@@ -10,10 +10,19 @@ documentation:
   # to any changes within docs folder
   - docs/**
 
-# Add `helm-charts` label
-helm-charts:
-  # to any changes within `charts` directory
-  - charts/**
+# Add `helm-chart-templates` label
+helm-chart-templates:
+  # to any changes within of helm chart templates
+  - charts/*/templates
+  # to any changes within of helm chart subcharts
+  - charts/*/charts
+  # to any changes within of helm chart Chart.yaml
+  - charts/*/Chart.yaml
+
+# Add `helm-chart-values` label
+helm-chart-values:
+  # to any changes of default helm chart values
+  - charts/*/values.yaml
 
 # Add `devcontainer` label
 devcontainer:

@@ -50,7 +50,8 @@
 				"Tim-Koehler.helm-intellisense",
 				"ms-kubernetes-tools.vscode-kubernetes-tools",
 				"redhat.vscode-openshift-extension-pack",
-				"redhat.vscode-openshift-connector"
+				"redhat.vscode-openshift-connector",
+				"github.vscode-github-actions"
 			]
 		}
 	},
