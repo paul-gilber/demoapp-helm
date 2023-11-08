@@ -4,6 +4,8 @@ name: Validate Helm Charts
 # Events that trigger workflows: https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows
 on:
   push:    # By default, a workflow only runs when a pull_request event's activity type is opened, synchronize, or reopened
+    paths:
+      - charts/**
 
 # Set Workflow-level permissions: https://docs.github.com/en/actions/using-jobs/assigning-permissions-to-jobs
 permissions:
