@@ -157,3 +157,6 @@ mysql:
     username: ""
     password: ""
     existingSecret: ""
+  primary:
+    persistence:
+      enabled: false

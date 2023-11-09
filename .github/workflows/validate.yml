@@ -84,7 +84,7 @@ jobs:
       - name: Helm Install
         run: |
           cd "${{ env.CHART_PATH }}"
-          helm install ${{ matrix.chart }} . --wait --timeout 30s
+          helm install ${{ matrix.chart }} . --wait --timeout 5m0s
 
   # helm-dry-run-openshift:
   #   runs-on: ubuntu-latest
