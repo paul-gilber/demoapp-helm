@@ -5,6 +5,9 @@
   http{{ if $.Values.ingress.tls }}s{{ end }}://{{ $host.host }}{{ .path }}
   {{- end }}
 {{- end }}
+{{- else if .Values.openshift.route.enabled }}
+  export HOST=$(oc get route {{ include "demoapp-backend.fullname" . }} --namespace {{ .Release.Namespace }} -o jsonpath='{.spec.host}')
+  echo http{{ if .Values.openshift.route.tls }}s{{ end }}://$HOST{{ .Values.openshift.route.path }}
 {{- else if contains "NodePort" .Values.service.type }}
   export NODE_PORT=$(kubectl get --namespace {{ .Release.Namespace }} -o jsonpath="{.spec.ports[0].nodePort}" services {{ include "demoapp-backend.fullname" . }})
   export NODE_IP=$(kubectl get nodes --namespace {{ .Release.Namespace }} -o jsonpath="{.items[0].status.addresses[0].address}")
