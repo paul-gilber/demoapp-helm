@@ -1,7 +1,7 @@
 ---
 apiVersion: v2
 name: demoapp-backend
-description: A Helm chart for Kubernetes
+description: Backend Application using Spring Boot
 
 dependencies:
   # https://artifacthub.io/packages/helm/bitnami/mysql
