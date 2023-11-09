@@ -20,7 +20,7 @@ jobs:
     strategy:
       matrix:
         chart: [demoapp-backend, demoapp-frontend]
-        value: [values.yaml]
+        value: [values.yaml, values-openshift-local.yaml]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
