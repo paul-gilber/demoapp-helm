@@ -25,6 +25,27 @@ env:
 # https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#environment-variables
 envFrom: {}
 
+# Health probes
+# Startup Probe protects (blocks readiness and liveness) the application during start-up
+startupProbe:
+  # Allows up to 5 minutes start-up time (periodSeconds X failureThreshold)
+  failureThreshold: 20
+  periodSeconds: 15
+  successThreshold: 1
+  timeoutSeconds: 3
+
+readinessProbe:
+  failureThreshold: 3
+  periodSeconds: 15
+  successThreshold: 1
+  timeoutSeconds: 3
+
+livenessProbe:
+  failureThreshold: 3
+  periodSeconds: 15
+  successThreshold: 1
+  timeoutSeconds: 3
+
 serviceAccount:
   # Specifies whether a service account should be created
   create: true
