@@ -3,7 +3,12 @@
 {
 	"name": "Kubernetes - Local Configuration",
 	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
-	"image": "mcr.microsoft.com/devcontainers/base:bullseye",
+	// "image": "mcr.microsoft.com/devcontainers/base:bullseye",
+
+	// Use Docker Compose File
+	"dockerComposeFile": "compose.yaml",
+	"service": "devcontainer",
+	"workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
 
 	// Available features: https://containers.dev/features
 	"features": {
@@ -22,7 +27,8 @@
 		"ghcr.io/stuartleeks/dev-container-features/shell-history:0": {},
 		"ghcr.io/joshuanianji/devcontainer-features/github-cli-persistence:0": {},
 		"ghcr.io/mpriscella/features/kind:1": {},
-		"ghcr.io/paul-gilber/devcontainer-features/openshift-cli-homebrew:1": {}
+		"ghcr.io/paul-gilber/devcontainer-features/openshift-cli-homebrew:1": {},
+		"ghcr.io/paul-gilber/devcontainer-features/yamllint-homebrew:1": {}
 	},
 
 	"remoteEnv": {
