@@ -27,13 +27,15 @@ jobs:
 
       - name: Install Helm
         uses: azure/setup-helm@v3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.6.0    # https://github.com/helm/chart-releaser-action
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           packages_with_index: true
           charts_dir: ./charts
+          config: ./cr.yaml
           pages_branch: gh-pages
