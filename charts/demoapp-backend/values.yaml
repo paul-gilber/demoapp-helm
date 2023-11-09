@@ -145,7 +145,7 @@ affinity: {}
 
 # Values for mysql: https://artifacthub.io/packages/helm/bitnami/mysql
 mysql:
-  enabled: false
+  enabled: true
   fullnameOverride: mysql
   image:
     registry: docker.io
