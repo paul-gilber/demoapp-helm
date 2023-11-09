@@ -1,0 +1,12 @@
+---
+# Using Docker Compose for Dev Containers: https://containers.dev/guide/dockerfile#docker-compose-dockerfile
+# Service top-level element reference: https://docs.docker.com/compose/compose-file/05-services/
+services:
+  devcontainer:
+    image: mcr.microsoft.com/devcontainers/base:bullseye
+    # network_mode: host
+    volumes:
+      - ../..:/workspaces:cached    # mounts the workspace folder from the local source tree into the Dev Container.
+    command: sleep infinity
+    extra_hosts:
+      - "api.crc.testing:host-gateway"

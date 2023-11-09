@@ -4,6 +4,8 @@ name: Validate Helm Charts
 # Events that trigger workflows: https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows
 on:
   push:    # By default, a workflow only runs when a pull_request event's activity type is opened, synchronize, or reopened
+    paths:
+      - charts/**
 
 # Set Workflow-level permissions: https://docs.github.com/en/actions/using-jobs/assigning-permissions-to-jobs
 permissions:
@@ -18,7 +20,7 @@ jobs:
     strategy:
       matrix:
         chart: [demoapp-backend, demoapp-frontend]
-        value: [values.yaml]
+        value: [values.yaml, values-openshift-local.yaml]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -47,7 +49,7 @@ jobs:
         value: [values.yaml]
         # k3s releases: https://github.com/k3s-io/k3s/releases
         # '' = stable version
-        k3s_version: ['']    # , v1.28.2+k3s1, v1.27.7+k3s1, v1.26.10+k3s1]
+        k3s_version: ['', v1.28.2+k3s1]
     runs-on: ubuntu-latest
     env:
       # Set KUBECONFIG path to default k3s location
@@ -82,8 +84,9 @@ jobs:
       - name: Helm Install
         run: |
           cd "${{ env.CHART_PATH }}"
-          helm install ${{ matrix.chart }} . --wait --timeout 30s
+          helm install ${{ matrix.chart }} . --wait --timeout 5m0s
 
+  # Requires OpenShift Cluster to install charts
   # helm-dry-run-openshift:
   #   runs-on: ubuntu-latest
   #   steps:

@@ -30,24 +30,60 @@ spec:
       serviceAccountName: {{ include "demoapp-backend.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      initContainers:
+        - name: wait-mysql
+          image: busybox:1.31
+          command: ['sh', '-c', 'echo -e "Waiting for MySQL at mysql:3306"; while ! nc -z mysql 3306; do sleep 1; printf "-"; done; echo -e "  >> MySQL has started";']
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
+          env:
+          {{- if .Values.mysql.enabled }}
+            {{- if not .Values.mysql.auth.existingSecret }}
+            - name: SPRING_DATASOURCE_USERNAME
+              value: root
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: mysql-root-password
+                  name: {{ .Values.mysql.fullnameOverride }}
+            {{- end }}
+          {{- end }}
+          {{- with .Values.env }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          envFrom:
+          {{- with .Values.envFrom }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
               containerPort: {{ .Values.service.port }}
               protocol: TCP
-          livenessProbe:
+          startupProbe:
             httpGet:
-              path: /
+              path: /actuator/health
               port: http
+          {{- with .Values.startupProbe }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           readinessProbe:
             httpGet:
-              path: /
+              path: /actuator/health
               port: http
+          {{- with .Values.readinessProbe }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: http
+          {{- with .Values.livenessProbe }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           {{- with .Values.volumeMounts }}

@@ -1,0 +1,15 @@
+{{- if and .Values.openshift.enabled .Values.mysql.enabled }}
+# Binds `{{ .Values.openshift.scc.mysql }}` securitycontextconstraints to service account
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: scc-{{ .Values.openshift.scc.mysql }}-{{ .Release.Namespace }}-{{ .Values.mysql.fullnameOverride }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: system:openshift:scc:{{ .Values.openshift.scc.mysql }}
+subjects:
+  - kind: ServiceAccount
+    name: {{ .Values.mysql.fullnameOverride }}
+    namespace: {{ .Release.Namespace }}
+{{- end }}

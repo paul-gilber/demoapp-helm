@@ -3,6 +3,13 @@ apiVersion: v2
 name: demoapp-backend
 description: A Helm chart for Kubernetes
 
+dependencies:
+  # https://artifacthub.io/packages/helm/bitnami/mysql
+  - name: mysql
+    version: "9.14.3"
+    repository: oci://registry-1.docker.io/bitnamicharts
+    condition: mysql.enabled
+
 # A chart can be either an 'application' or a 'library' chart.
 #
 # Application charts are a collection of templates that can be packaged into versioned archives
@@ -22,4 +29,5 @@ version: 0.1.0
 # incremented each time you make changes to the application. Versions are not expected to
 # follow Semantic Versioning. They should reflect the version the application is using.
 # It is recommended to use it with quotes.
-appVersion: "1.16.0"
+# demoapp-backend releases: https://github.com/paul-gilber/demoapp-backend/releases
+appVersion: "v1.0.4"
