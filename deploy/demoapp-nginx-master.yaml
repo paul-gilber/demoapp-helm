@@ -1,0 +1,17 @@
+# Master Ingress for NGINX Mergeable Ingress Type
+# https://github.com/nginxinc/kubernetes-ingress/tree/v3.3.2/examples/ingress-resources/mergeable-ingress-types
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: demoapp-master
+  annotations:
+    nginx.org/mergeable-ingress-type: master
+spec:
+  ingressClassName: nginx
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+  rules:
+    - host: demoapp.kubernetes.docker.internal

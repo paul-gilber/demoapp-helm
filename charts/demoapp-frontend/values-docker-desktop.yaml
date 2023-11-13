@@ -1,0 +1,29 @@
+---
+# Values for deploying demoapp-frontend to Docker Desktop's Kubernetes Cluster
+
+# Deployment container environment variables
+# https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#environment-variables
+env:
+  - name: REACT_APP_DEMOAPP_BACKEND_URL
+    value: http://demoapp.kubernetes.docker.internal/api    # URL should be accessible from the web browser
+
+openshift:
+  enabled: false    # Is this deployment for OpenShift?
+
+ingress:
+  enabled: true
+  className: nginx
+  annotations:
+    # NGINX ingress controller annotations
+    # https://docs.nginx.com/nginx-ingress-controller/configuration/ingress-resources/advanced-configuration-with-annotations/
+    # https://github.com/kubernetes/ingress-nginx/blob/main/docs/user-guide/nginx-configuration/annotations.md#rewrite
+    nginx.org/mergeable-ingress-type: minion
+  hosts:
+    - host: demoapp.kubernetes.docker.internal
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local

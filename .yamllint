@@ -6,6 +6,7 @@ yaml-files:
 
 ignore:
   - charts/**/templates/**
+  - nginx-ingress/**
 
 rules:
   anchors: enable
