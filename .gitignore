@@ -1,3 +1,4 @@
 # Charts
 charts/**/Chart.lock
 charts/**/*.tgz
+nginx-ingress
