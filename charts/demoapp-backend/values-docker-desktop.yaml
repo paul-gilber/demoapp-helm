@@ -1,0 +1,40 @@
+---
+# Values for deploying demoapp-frontend to Docker Desktop's Kubernetes Cluster
+
+openshift:
+  enabled: false    # Is this deployment for OpenShift?
+
+ingress:
+  enabled: true
+  className: nginx
+  annotations:
+    # NGINX ingress controller annotations
+    # https://docs.nginx.com/nginx-ingress-controller/configuration/ingress-resources/advanced-configuration-with-annotations/
+    # https://github.com/kubernetes/ingress-nginx/blob/main/docs/user-guide/nginx-configuration/annotations.md#rewrite
+    nginx.ingress.kubernetes.io/rewrite-target: /    # Forward route /api to to container /
+  hosts:
+    - host: demoapp.kubernetes.docker.internal
+      paths:
+        - path: /api
+          pathType: ImplementationSpecific
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+# Values for mysql: https://artifacthub.io/packages/helm/bitnami/mysql
+mysql:
+  enabled: true
+  # global
+  global:
+    storageClass: ""
+  image:
+    registry: docker.io
+    repository: mysql
+    ta: "8.0"
+  auth:
+    rootPassword: docker-desktop
+  # primary database
+  primary:
+    persistence:
+      enabled: true

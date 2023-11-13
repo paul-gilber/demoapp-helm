@@ -23,10 +23,43 @@ kubectl config set-context `kubectl config current-context` --namespace nginx-in
 kubectl config get-contexts
 
 # Install Helm Chart
-helm install nginx-ingress .
+helm install nginx-ingress . -n nginx-ingress
 
 # Check pods
 watch oc get pods
+
+# Get `nginx` Ingress Class
+oc get ingressclass nginx
+
+# Go back to previous working directory
+cd -
+```
+2. Create `demo` namespace
+```sh
+# Create `demo` namespace
+kubectl create ns demo
+
+# Set current namespace to `demo`
+kubectl config set-context `kubectl config current-context` --namespace demo
+kubectl config get-contexts
+```
+3. Deploy `demoapp-backend`
+```sh
+cd charts/demoapp-backend
+helm dependency update .
+helm upgrade -i demoapp-backend . \
+  -n demo \
+  --values values-docker-desktop.yaml
+cd -
+```
+4. Deploy `demoapp-frontend`
+```sh
+cd charts/demoapp-frontend
+helm dependency update .
+helm upgrade -i demoapp-frontend . \
+  -n demo \
+  --values values-docker-desktop.yaml
+cd -
 ```
 
 ## Deployment to OpenShift Local
@@ -47,12 +80,12 @@ oc new-project demo
 cd charts/demoapp-backend
 helm dependency update .
 helm upgrade -i demoapp-backend . \
-  --values values-openshift-local.yaml
+  --values values-docker-desktop.yaml
 ```
 3. Deploy `demoapp-frontend`
 ```sh
 cd charts/demoapp-frontend
 helm dependency update .
 helm upgrade -i demoapp-frontend . \
-  --values values-openshift-local.yaml
+  --values values-docker-desktop.yaml
 ```
