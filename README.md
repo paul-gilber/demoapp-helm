@@ -84,12 +84,12 @@ oc new-project demo
 cd charts/demoapp-backend
 helm dependency update .
 helm upgrade -i demoapp-backend . \
-  --values values-docker-desktop.yaml
+  --values values-openshift-local.yaml
 ```
 3. Deploy `demoapp-frontend`
 ```sh
 cd charts/demoapp-frontend
 helm dependency update .
 helm upgrade -i demoapp-frontend . \
-  --values values-docker-desktop.yaml
+  --values values-openshift-local.yaml
 ```
