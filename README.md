@@ -43,7 +43,11 @@ kubectl create ns demo
 kubectl config set-context `kubectl config current-context` --namespace demo
 kubectl config get-contexts
 ```
-3. Deploy `demoapp-backend`
+3. Create demoapp nginx master ingress
+```sh
+kubectl apply -f deploy/demoapp-nginx-master.yaml -n demo
+```
+4. Deploy `demoapp-backend`
 ```sh
 cd charts/demoapp-backend
 helm dependency update .
@@ -52,7 +56,7 @@ helm upgrade -i demoapp-backend . \
   --values values-docker-desktop.yaml
 cd -
 ```
-4. Deploy `demoapp-frontend`
+5. Deploy `demoapp-frontend`
 ```sh
 cd charts/demoapp-frontend
 helm dependency update .
